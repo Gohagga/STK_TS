@@ -50,10 +50,12 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
     
     rankText
         .clearPoints()
-        .setPoint(FramePoint.C, rankImage, FramePoint.C, 0, 0)
+        .setPoint(FramePoint.TL, rankImage, FramePoint.TL, 0, 0)
+        .setPoint(FramePoint.BR, rankImage, FramePoint.BR, 0, 0)
         .setSize(0.01, 0.012)
         .setScale(cfg.rank.textScale)
         .text = "0";
+    BlzFrameSetTextAlignment(rankText.handle, TEXT_JUSTIFY_CENTER, TEXT_JUSTIFY_MIDDLE);
     
     highlight
         .setPoint(FramePoint.C, buttonMain, FramePoint.C, 0, 0)
@@ -71,7 +73,7 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
 
     for (let link of links) {
         link
-            .setPoint(FramePoint.C, parent, FramePoint.C, 0, 0)
+            .setPoint(FramePoint.C, buttonMain, FramePoint.C, 0, 0)
             .setSize(cfg.link.width, cfg.link.width)
             .setTexture(cfg.link.inactiveTexture, 0, true)
             .setLevel(1)

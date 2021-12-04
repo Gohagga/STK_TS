@@ -57,8 +57,8 @@ export class Config {
         buttonWidth: 0.035,
         buttonTexture: "ReplaceableTextures/CommandButtons/BTNPeasant.blp",
         highlight: {
-            width: 0.032,
-            height: 0.032,
+            width: 0.031,
+            height: 0.031,
             texture: "UI/Widgets/Console/Human/CommandButton/human-activebutton.blp"
         },
         link: {

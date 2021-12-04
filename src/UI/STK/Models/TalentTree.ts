@@ -3,7 +3,7 @@ import { ITalentBuilder } from "../Interfaces/ITalentBuilder";
 import { ITalentTreeBuilder } from "../Interfaces/ITalentTreeBuilder";
 import { Talent, TalentData } from "./Talent";
 
-export abstract class TalentTree implements ITalentTreeBuilder {
+export abstract class TalentTree {
 
     private _unit: Unit;
 
@@ -21,13 +21,13 @@ export abstract class TalentTree implements ITalentTreeBuilder {
     private _rows = 7;
     private _maxTalents = 0;
 
-    public abstract Initialize(builder: TalentTree): void;
+    public abstract Initialize(builder: ITalentTreeBuilder): void;
 
     abstract talentPoints: number;
     
     constructor(unit: Unit) {
         this._unit = unit;
-        this.Initialize(this);
+        this.Initialize(new TalentTreeBuilder(this));
     }
 
     private AddTalentRaw(x: number, y: number, data: TalentData): Talent {
@@ -64,12 +64,10 @@ export abstract class TalentTree implements ITalentTreeBuilder {
     }
 
     // Api
-    public AddTalent(x: number, y: number, talentData: TalentData): ITalentBuilder {
+    public AddTalent(x: number, y: number, talentData: TalentData): Talent {
         if (!talentData.Cost) talentData.Cost = 1;
         let talent = this.AddTalentRaw(x, y, talentData);
-        return {
-            NextRank: (next: TalentData) => this.AddTalent(x, y, next)
-        }
+        return talent;
     }
 
     public SetTitle(title: string): void {
@@ -131,9 +129,10 @@ export abstract class TalentTree implements ITalentTreeBuilder {
 
     public CalculateTalentRequirements(index: number, talent: Talent): [boolean, string?] {
         if (!talent.requirements) return [true];
-        return talent.requirements({
+        let result = talent.requirements({
             unit: this._unit
         });
+        return result;
     }
 
     private ActivateTalentRecursively(index: number, talent: Talent, count: number, rank: number) {
@@ -380,5 +379,38 @@ export abstract class TalentTree implements ITalentTreeBuilder {
         if (!this._tempRankState)
             return this._rankState[index];
         return this._tempRankState[index];
+    }
+}
+
+class TalentTreeBuilder implements ITalentTreeBuilder {
+    
+    constructor(private tree: TalentTree) {
+        
+    }
+
+    get title() { return this.tree.title; }
+    set title(v: string) { this.tree.title = v; }
+    get talentPoints() { return this.tree.talentPoints; }
+    set talentPoints(v: number) { this.tree.talentPoints = v; }
+    get backgroundImage() { return this.tree.backgroundImage; }
+    set backgroundImage(v: string) { this.tree.backgroundImage = v; }
+
+    AddTalent(x: number, y: number, talentData: TalentData): ITalentBuilder {
+        this.tree.AddTalent(x, y, talentData);
+        return {
+            NextRank: (next: TalentData) => this.AddTalent(x, y, next)
+        }
+    }
+
+    SetColumnsRows(columns: number, rows: number): void {
+        this.tree.SetColumnsRows(columns, rows);
+    }
+
+    AddMultirankTalent(x: number, y: number, maxRank: number, talentDataBuilder: (level: number) => TalentData): ITalentTreeBuilder {
+        
+        for (let i = 1; i <= maxRank; i++) {
+            this.AddTalent(x, y, talentDataBuilder(i));
+        }
+        return this;
     }
 }

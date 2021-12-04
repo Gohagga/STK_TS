@@ -81,12 +81,19 @@ export class BasicTalentViewModel implements ITalentSlot {
         if (cost > 0) {
             text += "\n\n|cffffc04d[Cost " + I2S(cost) + "]|r ";
         }
-        if (cost > 0 && requirements && requirements != "") {
-            text += "|cffff6450Requires: " + requirements + "|r\n\n" + description;
-        } else if (requirements && requirements != "")
-            text += "\n\n|cffff6450Requires: " + requirements + "|r\n\n" + description
-        else
-            text += "\n\n" + description;
+        try {
+            
+            if ((cost > 0) && requirements && (requirements != "")) {
+                text += "|cffff6450Requires: " + requirements + "|r\n\n" + description;
+            } else if (requirements && (requirements != "")) {
+                text += "\n\n|cffff6450Requires: " + requirements + "|r\n\n" + description
+            }
+            else {
+                text += "\n\n" + description;
+            }
+        } catch (ex) {
+            print(ex);
+        }
 
         this._view.tooltip.text.text = text;
     }
@@ -186,12 +193,11 @@ export class BasicTalentViewModel implements ITalentSlot {
             this._view.button.main.visible = true;
             this._view.button.main.enabled = false;
             
-            let texture = this._talent.iconDisabled;
-            if (this._rank && this._rank > 0) texture = this._talent.iconEnabled;
-            this._view.button.image.setTexture(texture, 0, true);
+            if (this._rank && this._rank > 0)
+                this._view.button.image.setTexture(this._talent.iconEnabled, 0, true);
         } else {
             this._view.button.main.visible = false;
-            this._view.linkIntersection.visible = false;
+            this._view.linkIntersection.visible = true;
             if (this.rank > 0)
                 this._view.linkIntersection.setTexture(this._cfg.activeLinkTexture, 0, true);
             else

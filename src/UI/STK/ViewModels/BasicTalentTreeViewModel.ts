@@ -237,7 +237,7 @@ export class BasicTalentTreeViewModel {
         } else if (depOk && reqOk && talent.cost <= tree.talentPoints) {
             slot.state = TalentState.Available;
         } else {
-            slot.errorText = depError || "" + reqError || "";
+            slot.errorText = (depError ?? "") + (reqError ?? "");
 
             slot.state = TalentState.RequireDisabled;
             if (reqOk)
