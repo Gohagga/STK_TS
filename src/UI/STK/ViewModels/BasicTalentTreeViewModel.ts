@@ -230,13 +230,13 @@ export class BasicTalentTreeViewModel {
         slot.errorText = "";
         let depOk = true;
 
-        let depError: string | null = null;
+        let depError: string | undefined;
 
         if (depLeft.ok && depUp.ok && depRight.ok && depDown.ok) {
             depOk = true;
         } else {
             depOk = false;
-            let concatErrs = (err1?: string, err2?: string): string => err1 && err2 ? err1 + ", " + err2 : (err1 ? err1 : err2 ? err2 : null);
+            let concatErrs = (err1?: string, err2?: string): string | undefined => err1 && err2 ? err1 + ", " + err2 : (err1 ? err1 : err2 ? err2 : undefined);
             depError = concatErrs(concatErrs(concatErrs(depLeft && depLeft.error, depUp && depUp.error), depRight && depRight.error), depDown && depDown.error);
         }
 
