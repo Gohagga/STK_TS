@@ -132,15 +132,10 @@ export class BasicTalentViewModel implements ITalentSlot {
 
     RenderLinks(depLeft: LinkInfo, depUp: LinkInfo, depRight: LinkInfo, depDown: LinkInfo): void {
         
-        // print(depLeft, depUp, depRight, depDown)
-        // print("FIRST", this._linkVisibility.left, this._linkVisibility.up, this._linkVisibility.right, this._linkVisibility.down);
-        
         this._linkVisibility.left = depLeft.link;
         this._linkVisibility.up = depUp.link;
         this._linkVisibility.right = depRight.link;
         this._linkVisibility.down = depDown.link;
-
-        // print("SECOND", this._linkVisibility.left, this._linkVisibility.up, this._linkVisibility.right, this._linkVisibility.down);
 
         if (GetLocalPlayer() != this.watcher.handle) return;
 
@@ -209,7 +204,6 @@ export class BasicTalentViewModel implements ITalentSlot {
     UpdateLinkVisibility() {
         if (GetLocalPlayer() != this.watcher.handle) return;
 
-        print("setting visibility");
         this._view.links.down.visible = this._linkVisibility.down;
         this._view.links.right.visible = this._linkVisibility.right;
         this._view.links.up.visible = this._linkVisibility.up;

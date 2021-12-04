@@ -38,7 +38,6 @@ export abstract class TalentTree implements ITalentTreeBuilder {
 
             let existing = this._talents[index];
             if (existing.maxRank > 1) {
-                print("Adding last rank", existing.maxRank)
                 existing.RemoveTalentFinalDescription();
                 existing.SetLastRank(talent);
                 existing.SetTalentFinalDescription();
@@ -192,7 +191,6 @@ export abstract class TalentTree implements ITalentTreeBuilder {
                         let j = tempState;
                         while (j > this._rankState[i] && prevRank) {
                             this.DeallocateTalent(i, prevRank);
-                            print("RETURNING POINTS", this.talentPoints + prevRank.cost);
                             this.talentPoints += prevRank.cost;
                             prevRank = prevRank.prevRank;
                             j--;
@@ -218,7 +216,6 @@ export abstract class TalentTree implements ITalentTreeBuilder {
                 this._tempRankState[i] = this._rankState[i];
             }
         } catch (ex) {
-            print("EXXX", ex);
         }
         this._tempRankState = undefined;
     }
@@ -249,7 +246,6 @@ export abstract class TalentTree implements ITalentTreeBuilder {
 
         if (!requiredLevel) return { ok: true, link: false };
 
-        print("INDICES", index, depIndex);
         requiredLevel ||= 0;
 
         let talent = this._talents[index];
@@ -277,7 +273,6 @@ export abstract class TalentTree implements ITalentTreeBuilder {
             resultOk = false;
             errorText = "";
             if (depTalent) {
-                print("DEP ERROR", talent.name, "vs", depTalent.name)
                 errorText = depTalent.name;
                 if (depTalent.maxRank > 1) {
                     errorText += " (" + requiredLevel + ")";

@@ -79,15 +79,10 @@ export class BasicTalentTreeViewModel {
 
     OnCancel() {
 
-        print("CANCELL")
         if (!this._tree) return;
-        print(2)
         this._tree.ResetTempRankState();
-        print(3)
         this._tree.UpdateLinkStates();
-        print(4)
         this._onViewChanged(this, this._watcher);
-        print("CANCEL END")
     }
 
     OnClose() {
@@ -105,7 +100,6 @@ export class BasicTalentTreeViewModel {
 
     ResetTalentViewModels() {
 
-        print("ResetTalentViewModels");
         if (!this._tree) return;
 
         try {
@@ -208,10 +202,7 @@ export class BasicTalentTreeViewModel {
 
     UpdateTalentSlot(slot: ITalentSlot, talent: Talent, tree: TalentTree, index: number) {
 
-        print("UPDATE TALENT SLOT", talent.name);
         let tempState = tree.GetTalentTempState(index);
-
-        print("cols", tree.columns)
 
         let depLeft = tree.CheckDependencyKey(talent.dependency.left, index, index - 1);
         let depUp = tree.CheckDependencyKey(talent.dependency.up, index, index + tree.columns);
@@ -219,7 +210,6 @@ export class BasicTalentTreeViewModel {
         let depDown = tree.CheckDependencyKey(talent.dependency.down, index, index - tree.columns);
 
         slot.rank = tempState;
-        print("slot", index, tempState);
         slot.RenderLinks(depLeft, depUp, depRight, depDown);
 
         if (talent.isLink) {

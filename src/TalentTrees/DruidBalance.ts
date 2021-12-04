@@ -8,7 +8,6 @@ export class DruidBalance extends TalentTree {
         return this.ownerPlayer.getState(PLAYER_STATE_RESOURCE_LUMBER);
     }
     set talentPoints(value: number) {
-        print("setting lumber", value)
         this.ownerPlayer.setState(PLAYER_STATE_RESOURCE_LUMBER, value)
     }
 

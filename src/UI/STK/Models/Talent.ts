@@ -128,7 +128,6 @@ export class Talent {
         t = firstTalent;
         while (t._nextRank) {
             t = t._nextRank;
-            print("setting talent rank max rank", maxRank);
             t._maxRank = maxRank;
         }
     }
@@ -147,7 +146,6 @@ export class Talent {
         final.iconDisabled = this.iconDisabled;
 
         final._maxRank = this._maxRank;
-        print("MAX RANK FINAL", final._maxRank)
         return final;
     }
 
