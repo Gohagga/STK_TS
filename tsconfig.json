@@ -19,7 +19,10 @@
     },
     "plugins": [
       {
-        "transform": "war3-transformer"
+        "transform": "war3-transformer",
+        "mapDir": "D:/wc3-projects/STK_TS/maps/map.w3x",
+        "entryFile": "D:/wc3-projects/STK_TS/src/main.ts",
+        "outputDir": "D:/wc3-projects/STK_TS/dist/map.w3x"
       }
     ],
     "types": [
