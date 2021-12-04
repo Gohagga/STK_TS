@@ -15,7 +15,7 @@ export abstract class TalentTree implements ITalentTreeBuilder {
     private _talents: Talent[] = [];
     private _rankState: number[] = [];
     private _tempRankState?: number[];
-    private _linkTalents: Talent[] = [];
+    private _linkTalentIndices: number[] = [];
 
     private _columns = 4;
     private _rows = 7;
@@ -56,7 +56,7 @@ export abstract class TalentTree implements ITalentTreeBuilder {
         }
 
         if (talent.isLink)
-            this._linkTalents.push(talent);
+            this._linkTalentIndices.push(index);
 
         if (data.StartingLevel)
             this.tempRankState[index] = data.StartingLevel;
@@ -344,7 +344,7 @@ export abstract class TalentTree implements ITalentTreeBuilder {
 
     public UpdateLinkStates() {
         
-        for (let i = 0; i < this._linkTalents.length; i++) {
+        for (let i of this._linkTalentIndices) {
             this.UpdateLinkState(i);
         }
     }
