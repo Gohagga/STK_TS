@@ -4,6 +4,7 @@ export interface ITalentTreeView {
     window: Frame,
     talentTreeContainer: Frame,
     backgroundArt: Frame,
+    titleText: Frame,
     confirm: {
         buttonMain: Frame,
         text: Frame

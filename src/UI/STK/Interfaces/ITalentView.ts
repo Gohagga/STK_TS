@@ -18,4 +18,5 @@ export interface ITalentView {
     }
     highlight: Frame;
     links: Record<DependencyOrientation, Frame>;
+    linkIntersection: Frame;
 }

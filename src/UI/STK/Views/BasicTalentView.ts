@@ -1,13 +1,19 @@
 import { Frame } from "w3ts/handles/frame";
 import { ITalentView } from "../Interfaces/ITalentView";
 
-export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Frame): ITalentView {
+const cachedViews: Record<string, ITalentView> = {};
 
+export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Frame, index: string): ITalentView {
+
+    if (index in cachedViews) return cachedViews[index];
+
+    const linkIntersection = Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "LinkIntersection", parent.handle, "", 0));
     const links = [
         Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "LeftLink", parent.handle, "", 0)),
         Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "UpLink", parent.handle, "", 0)),
         Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "RightLink", parent.handle, "", 0)),
-        Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "DownLink", parent.handle, "", 0))
+        Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "DownLink", parent.handle, "", 0)),
+        linkIntersection
     ];
 
     const highlight = Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "AvailableImage", parent.handle, "", 0));
@@ -46,6 +52,7 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
         .clearPoints()
         .setPoint(FramePoint.C, rankImage, FramePoint.C, 0, 0)
         .setSize(0.01, 0.012)
+        .setScale(cfg.rank.textScale)
         .text = "0";
     
     highlight
@@ -91,8 +98,10 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
             up: links[1],
             right: links[2],
             down: links[3],
-        }
+        },
+        linkIntersection
     }
+    cachedViews[index] = retVal;
     return retVal;
 }
 
@@ -117,6 +126,7 @@ export interface IBasicTalentViewConfig {
             height: number
         },
         texture: string,
+        textScale: number,
     },
     highlight: {
         width: number,
