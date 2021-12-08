@@ -1,6 +1,6 @@
 import { Frame, MapPlayer } from "w3ts";
 import { ITalentSlot, LinkInfo, TalentState } from "../Interfaces/ITalentSlot";
-import { DependencyOrientation, ITalentView } from "../Interfaces/ITalentView";
+import { CharacteristicView, DependencyOrientation, ITalentView } from "../Interfaces/ITalentView";
 import { Talent } from "../Models/Talent";
 
 export class BasicTalentViewModel implements ITalentSlot {
@@ -77,25 +77,65 @@ export class BasicTalentViewModel implements ITalentSlot {
         if (t.nextRank && t.prevRank)
             description = t.prevRank.description + "\n\nNext rank:\n" + description;
 
-        text = t.name;
-        if (cost > 0) {
-            text += "\n\n|cffffc04d[Cost " + I2S(cost) + "]|r ";
-        }
-        try {
-            
-            if ((cost > 0) && requirements && (requirements != "")) {
-                text += "|cffff6450Requires: " + requirements + "|r\n\n" + description;
-            } else if (requirements && (requirements != "")) {
-                text += "\n\n|cffff6450Requires: " + requirements + "|r\n\n" + description
+        let charViewKeys = Object.keys(this._view.characteristicViews);
+
+        // If there are some characteristics
+        if (t.characteristics.length < 1) {
+            // Hide the whole line
+            this._view.tooltip.titleDescSpace.visible = false;
+            // this._view.tooltip.titleDescSpace
+            //     .setPoint(FramePoint.T, this._view.tooltip.titleText, FramePoint.B, 0, this._view.tooltip.titleDescSpace.height);
+        } else {
+            this._view.tooltip.titleDescSpace.visible = true;
+            // this._view.tooltip.titleDescSpace
+            //     .setPoint(FramePoint.T, this._view.tooltip.titleText, FramePoint.B, 0, 0);
+
+            // Hide extra empty views
+            for (let key of charViewKeys) {
+                this._view.characteristicViews[key].image.visible = false;
+                this._view.characteristicViews[key].text.visible = false;
             }
-            else {
-                text += "\n\n" + description;
+            // Show used views
+            let last: CharacteristicView | undefined = undefined;
+            for (let i = 0; i < t.characteristics.length; i++) {
+                let view = this._view.tooltip.characteristicFactory(i.toString());
+                if (t.characteristics[i]) {
+                    let charData = t.characteristics[i];
+                    if (charData.Image) {
+                        view.image.setTexture(charData.Image, 0, true);
+                        view.image.visible = true;
+                    }
+                    if (charData.Text) {
+                        view.text.text = charData.Text;
+                        // view.text.width = charData.Text.length * 0.007;
+                        view.text.visible = true;
+                    }
+                    if (last) {
+                        view.image.setPoint(FramePoint.L, last.text, FramePoint.R, 0.003, 0);
+                    }
+                }
+                last = view;
             }
-        } catch (ex) {
-            print(ex);
         }
 
-        this._view.tooltip.text.text = text;
+        text = "";
+        if (cost > 0) {
+            text += "|cffffc04d[Cost " + I2S(cost) + "]|r ";
+        }
+        if ((cost > 0) && requirements && (requirements != "")) {
+            text += "|cffff6450Requires: " + requirements + "|r\n\n" + description;
+        } else if (requirements && (requirements != "")) {
+            text += "|cffff6450Requires: " + requirements + "|r\n\n" + description
+        }
+        else {
+            text += description;
+        }
+
+        this._view.tooltip.titleText.text = t.name;
+        this._view.tooltip.descriptionText.text = text;
+        let hideCharacteristics = t.characteristics.length < 1;
+        print(hideCharacteristics);
+        this._view.tooltip.renderView(hideCharacteristics);
     }
 
     public set available(v : boolean) {

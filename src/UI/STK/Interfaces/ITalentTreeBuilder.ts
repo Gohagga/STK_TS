@@ -4,7 +4,7 @@ import { ITalentBuilder } from "./ITalentBuilder";
 export interface ITalentTreeBuilder {
     title: string;
     talentPoints: number;
-    backgroundImage: string;
+    backgroundImage: string | null;
 
     AddTalent(x: number, y: number, talentData: TalentData): ITalentBuilder;
     AddMultirankTalent(x: number, y: number, maxRank: number, talentDataBuilder: (level: number) => TalentData): ITalentTreeBuilder;

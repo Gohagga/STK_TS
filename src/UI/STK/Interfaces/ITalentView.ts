@@ -9,8 +9,12 @@ export interface ITalentView {
     };
     tooltip: {
         box: Frame;
-        text: Frame;
+        titleText: Frame;
+        descriptionText: Frame;
         rank: Frame;
+        titleDescSpace: Frame;
+        characteristicFactory: (i: string) => CharacteristicView,
+        renderView: (hideCharacteristics: boolean) => void,
     };
     rank: {
         image: Frame;
@@ -19,4 +23,7 @@ export interface ITalentView {
     highlight: Frame;
     links: Record<DependencyOrientation, Frame>;
     linkIntersection: Frame;
+    characteristicViews: Record<string, CharacteristicView>;
 }
+
+export type CharacteristicView = { image: Frame, text: Frame };

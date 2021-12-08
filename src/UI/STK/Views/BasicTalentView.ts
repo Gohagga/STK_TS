@@ -1,5 +1,5 @@
 import { Frame } from "w3ts/handles/frame";
-import { ITalentView } from "../Interfaces/ITalentView";
+import { CharacteristicView, ITalentView } from "../Interfaces/ITalentView";
 
 const cachedViews: Record<string, ITalentView> = {};
 
@@ -20,7 +20,9 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
     const buttonMain = new Frame("ScoreScreenBottomButtonTemplate", parent, 0, 0);
     const buttonImage = Frame.fromName("ScoreScreenButtonBackdrop", 0);
     const toolBox = new Frame("ListBoxWar3", buttonMain, 0, 0);
-    const toolText = Frame.fromHandle(BlzCreateFrameByType("TEXT", "StandardInfoTextTemplate", toolBox.handle, "StandardInfoTextTemplate", 0));
+    const titleText = Frame.fromHandle(BlzCreateFrameByType("TEXT", "StandardInfoTextTemplate", toolBox.handle, "StandardInfoTextTemplate", 0));
+    const descText = Frame.fromHandle(BlzCreateFrameByType("TEXT", "StandardInfoTextTemplate", toolBox.handle, "StandardInfoTextTemplate", 0));
+    const titleDescSpace = Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "LineBreak", toolBox.handle, "", 0));
     const rankImage = Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "Counter", buttonMain.handle, "", 0));
     const rankText = Frame.fromHandle(BlzCreateFrameByType("TEXT", "FaceFrameTooltip", buttonMain.handle, "", 0));
     const toolRank = Frame.fromHandle(BlzCreateFrameByType("TEXT", "FaceFrameTooltip", toolBox.handle, "", 0));
@@ -38,9 +40,27 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
         .setPoint(FramePoint.TL, parent, FramePoint.TR, 0, 0)
         .setSize(cfg.tooltip.width, cfg.tooltip.height);
 
-    toolText.clearPoints()
-        .setPoint(FramePoint.C, toolBox, FramePoint.C, cfg.tooltip.textY, cfg.tooltip.textY)
-        .setSize(cfg.tooltip.textWidth, cfg.tooltip.textHeight)
+    titleText
+        .clearPoints()
+        .setPoint(FramePoint.TL, toolBox, FramePoint.TL, cfg.tooltip.title.x + cfg.tooltip.title.paddingHorizontal, cfg.tooltip.title.y - cfg.tooltip.title.paddingVertical)
+        // .setPoint(FramePoint.TR, toolBox, FramePoint.TR, cfg.tooltip.title.x - cfg.tooltip.title.paddingHorizontal, cfg.tooltip.title.y - cfg.tooltip.title.paddingVertical)
+        .setSize(toolBox.width - cfg.tooltip.title.paddingHorizontal * 2, 0)
+        .text = "Title";
+
+    titleDescSpace
+        .clearPoints()
+        .setPoint(FramePoint.T, titleText, FramePoint.B, 0, 0)
+        .setSize(toolBox.width, cfg.tooltip.characteristics.heightSpace)
+        .setTexture("UI/Widgets/EscMenu/Human/blank-background.blp", 0, true);
+
+    let descTextX = cfg.tooltip.description.x + cfg.tooltip.description.paddingHorizontal;
+    let descTextY = cfg.tooltip.description.y - cfg.tooltip.description.paddingVertical;
+    descText
+        .clearPoints()
+        .setPoint(FramePoint.TL, titleDescSpace, FramePoint.BL, descTextX, descTextY)
+        // .setPoint(FramePoint.TR, titleDescSpace, FramePoint.BR, cfg.tooltip.description.x - cfg.tooltip.description.paddingHorizontal, cfg.tooltip.description.y - cfg.tooltip.description.paddingVertical)
+        .setSize(toolBox.width - cfg.tooltip.description.paddingHorizontal * 2, 0)
+        .setHeight(0)
         .text = cfg.tooltip.defaultText;
 
     rankImage
@@ -80,6 +100,18 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
             .visible = false;
     }
 
+    let renderView = (hideCharacteristics: boolean) => {
+        print("Render view", hideCharacteristics);
+        if (hideCharacteristics)
+            titleDescSpace
+                .setPoint(FramePoint.T, titleText, FramePoint.B, 0, cfg.tooltip.characteristics.height - cfg.tooltip.characteristics.y);
+        else
+            titleDescSpace
+                .setPoint(FramePoint.T, titleText, FramePoint.B, 0, 0);
+        descText
+            .setPoint(FramePoint.TL, titleDescSpace, FramePoint.BL, descTextX, descTextY);
+    }
+
     const retVal: ITalentView = {
         button: {
             main: buttonMain,
@@ -87,8 +119,12 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
         },
         tooltip: {
             box: toolBox,
-            text: toolText,
-            rank: toolRank
+            titleText: titleText,
+            descriptionText: descText,
+            rank: toolRank,
+            titleDescSpace,
+            characteristicFactory: (i: string) => GetTalentCharacteristicView(i, cachedViews[index], cfg.tooltip.characteristics),
+            renderView: (hideCharacteristics: boolean) => renderView(hideCharacteristics)
         },
         rank: {
             image: rankImage,
@@ -101,9 +137,58 @@ export function GenerateBasicTalentView(cfg: IBasicTalentViewConfig, parent: Fra
             right: links[2],
             down: links[3],
         },
-        linkIntersection
+        linkIntersection,
+        characteristicViews: {}
     }
     cachedViews[index] = retVal;
+    return retVal;
+}
+
+let abc = 0;
+
+function GetTalentCharacteristicView(
+    key: string,
+    view: {
+        tooltip: { titleDescSpace: Frame },
+        characteristicViews: Record<string, CharacteristicView>
+    },
+    cfg: {
+        x: number,
+        y: number,
+        width: number
+        height: number,
+        textScale: number,
+}): { image: Frame, text: Frame } {
+    
+    if (key in view.characteristicViews) return view.characteristicViews[key];
+    
+    const index = Number(key);
+    const image =
+        Frame.fromHandle(BlzCreateFrameByType("BACKDROP", "TooltipCharacteristicImage", view.tooltip.titleDescSpace.handle, "", index))
+        .clearPoints();
+    const text =
+        Frame.fromHandle(BlzCreateFrameByType("TEXT", "StandardInfoTextTemplate", view.tooltip.titleDescSpace.handle, "StandardInfoTextTemplate", index))
+        .clearPoints();
+
+    if (index == 0) {
+        image.setPoint(FramePoint.TL, view.tooltip.titleDescSpace, FramePoint.TL, cfg.x, cfg.y);
+    } else {
+        const prev = GetTalentCharacteristicView((index - 1).toString(), view, cfg);
+        image.setPoint(FramePoint.L, prev.text, FramePoint.R, 0.001, 0);
+    }
+
+    image.setSize(cfg.width, cfg.height);
+    text
+        .setPoint(FramePoint.L, image, FramePoint.R, 0.001, 0)
+        .setSize(0, cfg.height)
+        .setScale(cfg.textScale);
+    BlzFrameSetTextAlignment(text.handle, TEXT_JUSTIFY_CENTER, TEXT_JUSTIFY_MIDDLE);    
+    
+    const retVal = {
+        image,
+        text
+    }
+    view.characteristicViews[key] = retVal;
     return retVal;
 }
 
@@ -114,11 +199,27 @@ export interface IBasicTalentViewConfig {
     tooltip: {
         width: number,
         height: number,
-        textX: number,
-        textY: number,
-        textWidth: number,
-        textHeight: number,
+        title: {
+            x: number,
+            y: number,
+            paddingHorizontal: number,
+            paddingVertical: number,
+        },
+        description: {
+            x: number,
+            y: number,
+            paddingHorizontal: number,
+            paddingVertical: number,
+        },
         defaultText: string,
+        characteristics: {
+            heightSpace: number,
+            x: number,
+            y: number,
+            width: number
+            height: number,
+            textScale: number,
+        }
     },
     rank: {
         x: number,
@@ -139,7 +240,7 @@ export interface IBasicTalentViewConfig {
         width: number,
         activeTexture: string,
         inactiveTexture: string,
-    }
+    },
 }
 
 const FramePoint = {

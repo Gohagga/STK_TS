@@ -79,11 +79,27 @@ export class Config {
         tooltip: {
             width: 0.28,
             height: 0.16,
-            textX: 0,
-            textY: 0,
-            textWidth: 0.25,
-            textHeight: 0.13,
+            title: {
+                x: 0,
+                y: 0,
+                paddingHorizontal: 0.015,
+                paddingVertical: 0.015,
+            },
+            description: {
+                x: 0,
+                y: 0,
+                paddingHorizontal: 0.015,
+                paddingVertical: 0.00,
+            },
             defaultText: "Default talent name \n\nDefault talent description",
+            characteristics: {
+                heightSpace: 0.025,
+                x: 0.015,
+                y: -0.005,
+                width: 0.007,
+                height: 0.007,
+                textScale: 0.8,
+            }
         },
     }
 

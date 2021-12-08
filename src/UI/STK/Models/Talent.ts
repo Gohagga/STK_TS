@@ -23,6 +23,7 @@ export type TalentData = {
     OnDeactivate?: (this: void, event: ActivationEvent) => void;
     Requirements?: (this: void, event: RequirementsEvent) => [boolean, string?];
     Dependency?: TalentDependencies;
+    Characteristics?: {Image?: string, Text?: string}[]
     StartingLevel?: number;
     Cost?: number;
     IsLink?: boolean;
@@ -44,6 +45,7 @@ export class Talent {
 
     public cost: number = 0;
     public dependency: TalentDependencies = {};
+    public characteristics: {Image?: string, Text?: string}[] = [];
     public isLink: boolean = false;
     public isFinalDescription: boolean = false;
 
@@ -66,6 +68,7 @@ export class Talent {
             if (data.Requirements)      this.requirements = data.Requirements;
             if (data.Dependency)        this.dependency = data.Dependency;
             if (data.IsLink)            this.isLink = data.IsLink;
+            if (data.Characteristics)   this.characteristics = data.Characteristics;
             if (data.Cost)              this.cost = data.Cost;
             if (data.Tag)               this.tag = data.Tag;
         }

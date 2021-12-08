@@ -14,7 +14,7 @@ export function Initialize() {
     const treeUi = GenerateBasicTalentTreeView(config.talentTreeView, Frame.fromOrigin(ORIGIN_FRAME_GAME_UI, 0));
 
     const treeVm = new BasicTalentTreeViewModel(config.talentTreeViewModel, MapPlayer.fromIndex(0), treeUi,
-        (i) => new BasicTalentViewModel(config.talentViewModel, GenerateBasicTalentView(config.talentView, treeUi.talentTreeContainer, i.toString())));
+        (i) => new BasicTalentViewModel(config.talentViewModel, GenerateBasicTalentView(config.talentView, treeUi.window, i.toString())));
 
     const tree = new DruidBalance(Unit.fromHandle(gg_unit_Hblm_0003));
 

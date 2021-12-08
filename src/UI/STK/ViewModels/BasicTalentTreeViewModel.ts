@@ -94,7 +94,10 @@ export class BasicTalentTreeViewModel {
 
         if (this._tree) {
             this._view.titleText.text = this._tree.title;
-            this._view.backgroundArt.setTexture(this._tree.backgroundImage, 0, true);
+            // this._view.backgroundArt.setTexture(this._tree.backgroundImage, 0, true);
+        
+            this._view.backgroundArt.visible = this._tree.backgroundImage != null; 
+            if (this._tree.backgroundImage) this._view.backgroundArt.setTexture(this._tree.backgroundImage, 0, true);
         }
     }
 

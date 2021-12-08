@@ -31,10 +31,21 @@ export class DruidBalance extends TalentTree {
         builder.SetColumnsRows(4, 7)
         builder.title = "Balance";
         builder.talentPoints = 6;
-        builder.backgroundImage = "balancebg.blp";
+        // builder.backgroundImage = "balancebg.blp";
 
         // The tree should be built with talents here
         // ==============================================
+
+        const goldCost = (cost: number) => {
+            return {
+                Image: "ReplaceableTextures/CommandButtons/BTNspell_nature_abolishmagic",
+                Text: cost.toString()
+            }
+        };
+        const magic = {
+            Image: "ReplaceableTextures/CommandButtons/BTNspell_nature_abolishmagic",
+            Text: "abc"
+        }
 
         // Improved Wrath <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         // Rank 1
@@ -77,7 +88,7 @@ export class DruidBalance extends TalentTree {
         // Nature's Grasp <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         builder.AddTalent(1, 6, {
 
-            Name: "Nature's Grasp",
+            Name: "Nature's Grasp XXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             Description: "While active, any time an enemy strikes the caster they have a 35% chance to become afflicted by Entangling Roots (Rank 1).  Only useable outdoors.  1 charge.  Lasts 45 sec.",
             Icon: "spell_nature_natureswrath",
             OnActivate: (e) => this.Activate_CallFlyingSheep(e),
@@ -87,9 +98,10 @@ export class DruidBalance extends TalentTree {
         builder.AddMultirankTalent(2, 6, 4, lvl => {
             const entangleChanceBonus = [15, 30, 45, 65];
             return {
-                Name: "Improved Nature's Grasp",
+                Name: "Improved Nature's Grasp XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 Description: `Increases the chance for your Nature's Grasp to entangle an enemy by ${entangleChanceBonus[lvl-1]}%.`,
                 Icon: "spell_nature_natureswrath",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
                 Dependency: { left: 1 },
             }
@@ -99,9 +111,10 @@ export class DruidBalance extends TalentTree {
         builder.AddMultirankTalent(0, 5, 3, lvl => {
             const chance = [40, 70, 100];
             return {
-                Name: "Improved Entangling Roots",
+                Name: "Improved Entangling Roots XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
                 Description: `Gives you a ${chance[lvl-1]}% chance to avoid interruption caused by damage while casting Entangling Roots.`,
                 Icon: "EntanglingRoots",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
             }
         });
@@ -112,6 +125,7 @@ export class DruidBalance extends TalentTree {
                 Name: "Improved Moonfire",
                 Description: `Increases the damage and critical strike chance of your Moonfire spell by ${lvl * 2}%.`,
                 Icon: "Starfall",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
             }
         });
@@ -122,6 +136,7 @@ export class DruidBalance extends TalentTree {
                 Name: "Natural Weapons",
                 Description: `Increases the damage you deal with physical attacks in all forms by ${lvl * 2}%.`,
                 Icon: "AdvancedStrengthOfTheMoon",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
             }
         });
@@ -132,6 +147,7 @@ export class DruidBalance extends TalentTree {
                 Name: "Natural Shapeshifter",
                 Description: `Reduces the mana cost of all shapeshifting by ${lvl * 10}%.`,
                 Icon: "WispSplode",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
             }
         });
@@ -142,6 +158,7 @@ export class DruidBalance extends TalentTree {
                 Name: "Improved Thorns",
                 Description: `Increases damage caused by your Thorns spell by ${lvl * 25}%.`,
                 Icon: "Thorns",
+                Characteristics: [ goldCost(50), magic ],
                 OnActivate: (e) => this.Activate_CallFlyingSheep(e),
             }
         });

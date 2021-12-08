@@ -9,7 +9,7 @@ export abstract class TalentTree {
 
     private _talentPoints: number = 0;
     private _title: string = "";
-    private _backgroundImage: string = "";
+    private _backgroundImage: string | null = null;
     private _icon : string | null = null;
 
     private _talents: Talent[] = [];
@@ -90,10 +90,10 @@ export abstract class TalentTree {
         this._title = value;
     }
 
-    public get backgroundImage(): string {
+    public get backgroundImage(): string | null {
         return this._backgroundImage;
     }
-    public set backgroundImage(value: string) {
+    public set backgroundImage(value: string | null) {
         this._backgroundImage = value;
     }
     
@@ -393,7 +393,7 @@ class TalentTreeBuilder implements ITalentTreeBuilder {
     get talentPoints() { return this.tree.talentPoints; }
     set talentPoints(v: number) { this.tree.talentPoints = v; }
     get backgroundImage() { return this.tree.backgroundImage; }
-    set backgroundImage(v: string) { this.tree.backgroundImage = v; }
+    set backgroundImage(v: string | null) { this.tree.backgroundImage = v; }
 
     AddTalent(x: number, y: number, talentData: TalentData): ITalentBuilder {
         this.tree.AddTalent(x, y, talentData);

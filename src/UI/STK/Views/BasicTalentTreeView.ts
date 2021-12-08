@@ -18,7 +18,7 @@ export function GenerateBasicTalentTreeView(cfg: IBasicTalentTreeViewConfig, par
     window
         .setAbsPoint(FRAMEPOINT_TOPLEFT, cfg.window.x, cfg.window.y) 
         .setAbsPoint(FRAMEPOINT_BOTTOMRIGHT, cfg.window.x + cfg.window.width, cfg.window.y - cfg.window.height)
-        // .setVisible(false);
+        .setVisible(false);
 
     talentTreeContainer
         .clearPoints()
